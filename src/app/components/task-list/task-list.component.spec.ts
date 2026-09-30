@@ -104,4 +104,55 @@ describe('TaskListComponent', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="no-matches-state"]')).toBeNull();
     expect(fixture.nativeElement.querySelectorAll('app-task-card').length).toBe(1);
   });
+
+  it('should transition to empty state when all tasks are deleted via task card', () => {
+    const task = todoService.addTodo({ title: 'Task to be deleted' });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="empty-state"]')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-card').length).toBe(1);
+
+    // Click delete button and confirm
+    const deleteBtn = fixture.nativeElement.querySelector('.delete-btn') as HTMLButtonElement;
+    deleteBtn.click();
+    fixture.detectChanges();
+
+    const confirmBtn = fixture.nativeElement.querySelector('.confirm-delete-btn') as HTMLButtonElement;
+    confirmBtn.click();
+    fixture.detectChanges();
+
+    expect(todoService.todos().length).toBe(0);
+    expect(fixture.nativeElement.querySelectorAll('app-task-card').length).toBe(0);
+    expect(fixture.nativeElement.querySelector('[data-testid="empty-state"]')).not.toBeNull();
+  });
+
+  it('should dynamically re-sort tasks when a task due date is edited in place', () => {
+    todoService.addTodo({ title: 'Upcoming Task', dueDate: '2099-01-01' });
+    todoService.addTodo({ title: 'Standard Task' });
+    fixture.detectChanges();
+
+    let titles = fixture.nativeElement.querySelectorAll('.task-title');
+    expect(titles[0].textContent).toContain('Upcoming Task');
+    expect(titles[1].textContent).toContain('Standard Task');
+
+    // Edit Standard Task's due date to be in the past (overdue)
+    const taskCards = fixture.nativeElement.querySelectorAll('app-task-card');
+    const standardCardEditBtn = taskCards[1].querySelector('.edit-btn') as HTMLButtonElement;
+    standardCardEditBtn.click();
+    fixture.detectChanges();
+
+    const dueDateInput = fixture.nativeElement.querySelector('.edit-due-date-input') as HTMLInputElement;
+    dueDateInput.value = '2020-01-01';
+    dueDateInput.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    const saveBtn = fixture.nativeElement.querySelector('.save-edit-btn') as HTMLButtonElement;
+    saveBtn.click();
+    fixture.detectChanges();
+
+    // Now Standard Task is overdue, so it moves ahead of Upcoming Task
+    titles = fixture.nativeElement.querySelectorAll('.task-title');
+    expect(titles[0].textContent).toContain('Standard Task');
+    expect(titles[1].textContent).toContain('Upcoming Task');
+  });
 });
