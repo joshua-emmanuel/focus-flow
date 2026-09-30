@@ -8,22 +8,22 @@
 <div class="flex w-screen h-screen relative bg-slate-50 text-slate-900 overflow-hidden font-sans">
   <!-- Left Sidebar -->
   <aside
-    class="w-60 bg-white border-r border-slate-200 flex flex-col shrink-0 p-5 gap-5 transition-transform duration-200 ease-in-out fixed inset-y-0 left-0 z-50 md:static md:translate-x-0 shadow-xl md:shadow-none"
+    class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 p-5 gap-5 transition-transform duration-200 ease-in-out fixed inset-y-0 left-0 z-50 md:static md:translate-x-0 shadow-xl md:shadow-none"
     [class.-translate-x-full]="!isMobileMenuOpen()"
     [class.translate-x-0]="isMobileMenuOpen()"
   >
     <div class="brand-header flex items-center justify-between px-1">
-      <div class="brand-left flex items-center gap-2.5">
+      <div class="brand-left flex items-center gap-3">
         <div
-          class="w-7 h-7 bg-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-sm"
+          class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-base"
         >
           ✓
         </div>
         <div class="brand-text">
-          <h1 class="text-base font-bold tracking-tight text-slate-900 leading-none m-0">
+          <h1 class="text-lg font-bold tracking-tight text-slate-900 leading-tight m-0">
             FocusFlow
           </h1>
-          <span class="text-[10px] font-mono text-slate-400 tracking-wider">WORKSPACE V2.4</span>
+          <span class="text-xs font-mono text-slate-400 tracking-wider">WORKSPACE V2.4</span>
         </div>
       </div>
       <button
@@ -36,24 +36,24 @@
     </div>
 
     <div
-      class="flex items-center justify-between bg-white border border-slate-200 rounded-md px-2.5 py-1.5 text-xs text-slate-400"
+      class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-400"
     >
       <span>🔍 Jump to task...</span>
       <kbd
-        class="font-mono text-xs bg-slate-100 border border-slate-200 px-1 py-0.5 rounded text-slate-500"
+        class="font-mono text-xs bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-slate-500 font-medium"
         >/</kbd
       >
     </div>
 
     <div>
       <div
-        class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 pb-1.5 flex justify-between items-center"
+        class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 pb-2 flex justify-between items-center"
       >
         Smart Views
       </div>
       <ul class="list-none flex flex-col gap-1 p-0 m-0">
         <li
-          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs cursor-pointer transition-colors"
+          class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-colors"
           [class.bg-indigo-50]="
             todoService.filterState().statusFilter === 'active' &&
             todoService.filterState().categoryFilter === null
@@ -76,25 +76,31 @@
             closeMobileMenu()
           "
         >
-          <div class="flex items-center gap-2"><span>☼</span> Today</div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-5 h-5 flex items-center justify-center shrink-0 text-base leading-none">☼</span>
+            <span>Today</span>
+          </div>
           <span
-            class="text-xs font-mono bg-indigo-600 text-white px-1.5 py-0.5 rounded-full font-bold"
+            class="text-xs font-mono bg-indigo-600 text-white px-2 py-0.5 rounded-full font-bold"
           >
             {{ todoService.activeTodosCount() }}
           </span>
         </li>
         <li
-          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
+          class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
         >
-          <div class="flex items-center gap-2"><span>⇡</span> Upcoming</div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-5 h-5 flex items-center justify-center shrink-0 text-base leading-none">⇡</span>
+            <span>Upcoming</span>
+          </div>
           <span
-            class="text-xs font-mono bg-white border border-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full font-semibold"
+            class="text-xs font-mono bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-semibold"
           >
             {{ todoService.upcomingTodosCount() }}
           </span>
         </li>
         <li
-          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs cursor-pointer transition-colors"
+          class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-colors"
           [class.bg-indigo-50]="
             todoService.filterState().statusFilter === 'all' &&
             todoService.filterState().categoryFilter === null
@@ -117,9 +123,12 @@
             closeMobileMenu()
           "
         >
-          <div class="flex items-center gap-2"><span>≡</span> All Tasks</div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-5 h-5 flex items-center justify-center shrink-0 text-base leading-none">≡</span>
+            <span>All Tasks</span>
+          </div>
           <span
-            class="text-xs font-mono bg-white border border-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full font-semibold"
+            class="text-xs font-mono bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-semibold"
           >
             {{ todoService.totalCount() }}
           </span>
@@ -128,41 +137,47 @@
     </div>
 
     <div>
-      <div class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 pb-1.5">
+      <div class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 pb-2">
         Lists
       </div>
       <ul class="list-none flex flex-col gap-1 p-0 m-0">
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
           [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Work'"
           [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Work'"
           [class.font-semibold]="todoService.filterState().categoryFilter === 'Work'"
           [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Work'"
           (click)="todoService.setCategoryFilter('Work'); closeMobileMenu()"
         >
-          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span class="w-5 h-5 flex items-center justify-center shrink-0">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+          </span>
           <span>Work</span>
         </li>
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
           [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Personal'"
           [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Personal'"
           [class.font-semibold]="todoService.filterState().categoryFilter === 'Personal'"
           [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Personal'"
           (click)="todoService.setCategoryFilter('Personal'); closeMobileMenu()"
         >
-          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span class="w-5 h-5 flex items-center justify-center shrink-0">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          </span>
           <span>Personal</span>
         </li>
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
           [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Projects'"
           [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Projects'"
           [class.font-semibold]="todoService.filterState().categoryFilter === 'Projects'"
           [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Projects'"
           (click)="todoService.setCategoryFilter('Projects'); closeMobileMenu()"
         >
-          <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span class="w-5 h-5 flex items-center justify-center shrink-0">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          </span>
           <span>Projects</span>
         </li>
       </ul>
@@ -232,8 +247,13 @@
               {{ todoService.activeTodosCount() }}
             </span>
           </h2>
-          <div class="text-xs text-slate-500 mt-1">
+          <div class="text-[13px] sm:text-sm text-slate-500 font-medium mt-1 flex items-center flex-wrap gap-2">
             <span>{{ fullDate }}</span>
+            @if (todoService.overdueCount() > 0) {
+              <span class="text-xs sm:text-sm font-semibold text-rose-600 inline-flex items-center gap-1">
+                <span>•</span> ⚠️ {{ todoService.overdueCount() }} overdue item{{ todoService.overdueCount() === 1 ? '' : 's' }} need attention
+              </span>
+            }
           </div>
         </div>
       </div>
