@@ -31,7 +31,7 @@
       <div class="task-meta-line flex items-center flex-wrap gap-2 text-xs text-slate-500">
         <!-- Priority Badge -->
         <span
-          class="badge text-[11px] font-medium px-2 py-0.5 rounded-full inline-flex items-center capitalize"
+          class="badge text-xs font-medium px-2 py-0.5 rounded-full inline-flex items-center capitalize"
           [class]="priorityBadgeClass()"
         >
           {{ task().priority }}
@@ -40,7 +40,7 @@
         <!-- Overdue Badge -->
         @if (isOverdue()) {
           <span
-            class="badge badge-overdue text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-600 text-white inline-flex items-center gap-1"
+            class="badge badge-overdue text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-600 text-white inline-flex items-center gap-1"
           >
             <span>⚠️</span> Overdue
           </span>
@@ -49,7 +49,7 @@
         <!-- Category Badge -->
         @if (task().category) {
           <span
-            class="badge text-[11px] font-medium px-2 py-0.5 rounded-full inline-flex items-center"
+            class="badge text-xs font-medium px-2 py-0.5 rounded-full inline-flex items-center"
             [class]="categoryBadgeClass()"
           >
             {{ task().category }}
@@ -59,7 +59,7 @@
         <!-- Due Date -->
         @if (task().dueDate) {
           <span
-            class="due-date-pill font-mono text-[11px] inline-flex items-center gap-1 text-slate-500"
+            class="due-date-pill font-mono text-xs inline-flex items-center gap-1 text-slate-500"
           >
             <span>📅</span> {{ task().dueDate }}
           </span>
