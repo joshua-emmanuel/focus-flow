@@ -69,4 +69,44 @@ describe('App Component', () => {
 
     expect(todoService.filterState().categoryFilter).toBe('Work');
   });
+
+  it('should render CadenceCardComponent and reflect real-time metrics across app', async () => {
+    const fixture = TestBed.createComponent(App);
+    const todoService = TestBed.inject(TodoService);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const cadenceCard = compiled.querySelector('app-cadence-card');
+    expect(cadenceCard).not.toBeNull();
+
+    // Add tasks and verify cadence card reflects active count and completion
+    const t1 = todoService.addTodo({ title: 'Task Alpha' });
+    const t2 = todoService.addTodo({ title: 'Task Beta' });
+    fixture.detectChanges();
+
+    expect(cadenceCard?.querySelector('.active-tasks-title')?.textContent).toContain('2 Active Tasks Left');
+    expect(cadenceCard?.querySelector('.fraction-label')?.textContent).toContain('0 / 2 Done');
+
+    // Complete t1
+    todoService.toggleTodo(t1.id);
+    fixture.detectChanges();
+
+    expect(cadenceCard?.querySelector('.active-tasks-title')?.textContent).toContain('1 Active Task Left');
+    expect(cadenceCard?.querySelector('.fraction-label')?.textContent).toContain('1 / 2 Done');
+    expect(cadenceCard?.querySelector('.cadence-subtitle')?.textContent).toContain('50% daily cadence finished');
+
+    // Clear completed via cadence card
+    const clearBtn = cadenceCard?.querySelector('.clear-done-btn') as HTMLButtonElement;
+    clearBtn.click();
+    fixture.detectChanges();
+
+    const confirmBtn = cadenceCard?.querySelector('.confirm-clear-btn') as HTMLButtonElement;
+    confirmBtn.click();
+    fixture.detectChanges();
+
+    expect(todoService.todos().length).toBe(1);
+    expect(cadenceCard?.querySelector('.active-tasks-title')?.textContent).toContain('1 Active Task Left');
+    expect(cadenceCard?.querySelector('.fraction-label')?.textContent).toContain('0 / 1 Done');
+  });
 });
