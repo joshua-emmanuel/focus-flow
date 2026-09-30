@@ -1,3 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* Theme variables - FocusFlow Design System */
+:root {
+  /* Surfaces */
+  --bg: #f8fafc;
+  --sidebar-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f9fafb;
+  --surface-subtle: #f1f4f9;
+  --surface-active: #e2e8f0;
+
+  /* Borders */
+  --border: #e2e8f0;
+  --border-light: #edf2f7;
+  --border-focus: #4f46e5;
+
+  /* Typography Colors */
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --muted: #64748b;
+  --faint: #94a3b8;
+
+  /* Primary Brand (FocusFlow Indigo) */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --primary-border: #c7d2fe;
+  --primary-ink: #ffffff;
+
+  /* Dark CTA Buttons */
+  --btn-dark: #0f172a;
+  --btn-dark-hover: #1e293b;
+
+  /* Priority & Status Badges */
+  --badge-high-bg: #fee2e2;
+  --badge-high-text: #dc2626;
+  --badge-high-border: #fecaca;
+
+  --badge-med-bg: #fef3c7;
+  --badge-med-text: #b45309;
+  --badge-med-border: #fde68a;
+
+  --badge-low-bg: #f1f5f9;
+  --badge-low-text: #475569;
+  --badge-low-border: #e2e8f0;
+
+  --badge-overdue-bg: #fee2e2;
+  --badge-overdue-text: #b91c1c;
+  --badge-overdue-border: #fca5a5;
+
+  /* Category Badges */
+  --badge-work-bg: #e0e7ff;
+  --badge-work-text: #3730a3;
+  --badge-work-border: #c7d2fe;
+
+  --badge-personal-bg: #fef3c7;
+  --badge-personal-text: #92400e;
+  --badge-personal-border: #fde68a;
+
+  --badge-project-bg: #f1f5f9;
+  --badge-project-text: #334155;
+  --badge-project-border: #cbd5e1;
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* Scale */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}

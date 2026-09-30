@@ -1,13 +1,35 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { TodoService } from './services/todo.service';
+import { QuickAddComponent } from './components/quick-add/quick-add.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [QuickAddComponent, TaskListComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
 })
-
 export class App {
-  protected readonly title = signal('todo-app');
+  protected readonly todoService = inject(TodoService);
+  protected readonly title = signal('FocusFlow');
+  protected readonly isMobileMenuOpen = signal(false);
+
+  protected readonly todayDate = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date());
+
+  protected readonly fullDate = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date());
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen.set(false);
+  }
 }

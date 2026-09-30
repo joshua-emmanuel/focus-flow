@@ -1,0 +1,125 @@
+<div
+  class="quick-add-card bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-xs flex flex-col gap-3"
+>
+  <div class="quick-add-input-row flex items-center gap-2.5">
+    <span
+      class="add-icon text-indigo-600 font-semibold text-lg select-none shrink-0"
+      aria-hidden="true"
+      >⊕</span
+    >
+    <input
+      type="text"
+      class="quick-input flex-1 bg-transparent border-0 outline-hidden text-sm text-slate-800 placeholder:text-slate-400 focus:ring-0"
+      placeholder="What do you need to get done today? (Type task title & press Enter)"
+      [value]="title()"
+      (input)="onTitleInput($event)"
+      (keydown.enter)="onSubmit()"
+      aria-label="New task title"
+    />
+  </div>
+
+  @if (errorMessage()) {
+    <div
+      class="error-banner text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-2.5 py-1.5 flex items-center gap-1.5"
+      role="alert"
+    >
+      <span>⚠️</span> {{ errorMessage() }}
+    </div>
+  }
+
+  <div
+    class="quick-add-footer flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-100"
+  >
+    <div class="quick-add-options flex flex-wrap items-center gap-2">
+      <!-- Priority Selector -->
+      <div
+        class="priority-pill-selector flex bg-slate-100 rounded-lg p-0.5 gap-0.5"
+        role="radiogroup"
+        aria-label="Task priority"
+      >
+        <button
+          type="button"
+          class="pri-btn px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer border-0"
+          [class.selected]="priority() === 'low'"
+          [class.bg-indigo-600]="priority() === 'low'"
+          [class.text-white]="priority() === 'low'"
+          [class.shadow-xs]="priority() === 'low'"
+          [class.text-slate-600]="priority() !== 'low'"
+          [class.hover:text-slate-900]="priority() !== 'low'"
+          (click)="setPriority('low')"
+          role="radio"
+          [attr.aria-checked]="priority() === 'low'"
+        >
+          Low
+        </button>
+        <button
+          type="button"
+          class="pri-btn px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer border-0"
+          [class.selected]="priority() === 'medium'"
+          [class.bg-indigo-600]="priority() === 'medium'"
+          [class.text-white]="priority() === 'medium'"
+          [class.shadow-xs]="priority() === 'medium'"
+          [class.text-slate-600]="priority() !== 'medium'"
+          [class.hover:text-slate-900]="priority() !== 'medium'"
+          (click)="setPriority('medium')"
+          role="radio"
+          [attr.aria-checked]="priority() === 'medium'"
+        >
+          Medium
+        </button>
+        <button
+          type="button"
+          class="pri-btn px-2.5 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer border-0"
+          [class.selected]="priority() === 'high'"
+          [class.bg-indigo-600]="priority() === 'high'"
+          [class.text-white]="priority() === 'high'"
+          [class.shadow-xs]="priority() === 'high'"
+          [class.text-slate-600]="priority() !== 'high'"
+          [class.hover:text-slate-900]="priority() !== 'high'"
+          (click)="setPriority('high')"
+          role="radio"
+          [attr.aria-checked]="priority() === 'high'"
+        >
+          High
+        </button>
+      </div>
+
+      <!-- Category Selector -->
+      <div class="category-selector">
+        <select
+          class="opt-chip-select bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-2 py-1 outline-hidden cursor-pointer hover:bg-slate-100 transition-colors"
+          (change)="onCategoryChange($event)"
+          aria-label="Task category"
+        >
+          <option value="Work" [selected]="category() === 'Work'">💼 Work</option>
+          <option value="Personal" [selected]="category() === 'Personal'">🏠 Personal</option>
+          <option value="Projects" [selected]="category() === 'Projects'">🚀 Projects</option>
+        </select>
+      </div>
+
+      <!-- Due Date Selector -->
+      <div class="due-date-selector">
+        <input
+          type="date"
+          class="opt-chip-date bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-2 py-1 outline-hidden cursor-pointer hover:bg-slate-100 transition-colors font-mono"
+          [value]="dueDate()"
+          (input)="onDueDateChange($event)"
+          aria-label="Due date"
+        />
+      </div>
+    </div>
+
+    <div class="quick-add-submit-group flex items-center gap-2.5">
+      <span class="enter-cue hidden sm:inline font-mono text-[11px] text-slate-400 select-none"
+        >Press ↵ Enter to save</span
+      >
+      <button
+        type="button"
+        class="btn-submit-task bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg px-3 py-1.5 cursor-pointer flex items-center gap-1.5 transition-colors border-0"
+        (click)="onSubmit()"
+      >
+        <span>↗</span> Add Task
+      </button>
+    </div>
+  </div>
+</div>

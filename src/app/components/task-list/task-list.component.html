@@ -1,0 +1,28 @@
+<div class="task-list-container flex flex-col gap-3">
+  @if (todoService.todos().length === 0) {
+    <!-- Empty State -->
+    <div class="empty-card bg-white border border-slate-200 rounded-2xl py-12 px-6 w-full shadow-xs flex flex-col items-center text-center gap-3" data-testid="empty-state">
+      <div class="target-circle w-14 h-14 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl" aria-hidden="true">🎯</div>
+      <h3 class="empty-title text-lg font-bold text-slate-900 tracking-tight m-0">All tasks completed!</h3>
+      <p class="empty-desc text-sm text-slate-500 max-w-sm leading-relaxed m-0">
+        You're all caught up for today. Add a new goal above to plan ahead.
+      </p>
+    </div>
+  } @else {
+    <!-- Task List -->
+    <div class="section-header flex justify-between items-center font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600 px-1">
+      <span>⏰ Tasks <span class="item-count-label text-slate-400 font-medium">({{ todoService.activeTodosCount() }} Active / {{ todoService.totalCount() }} Total)</span></span>
+      <span class="text-[11px] normal-case text-slate-400 font-normal">Chronological</span>
+    </div>
+
+    <div class="tasks-grid flex flex-col gap-2">
+      @for (task of todoService.todos(); track task.id) {
+        <app-task-card
+          [task]="task"
+          (toggle)="todoService.toggleTodo($event)"
+        />
+      }
+    </div>
+  }
+</div>
+

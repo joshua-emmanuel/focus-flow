@@ -1,0 +1,59 @@
+<div
+  class="task-card flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-xs transition-all duration-150"
+  [class.is-completed]="task().completed"
+  [class.bg-slate-50]="task().completed"
+  [class.opacity-75]="task().completed"
+>
+  <div class="task-card-left flex items-start gap-3 flex-1 min-w-0">
+    <input
+      type="checkbox"
+      class="task-checkbox mt-0.5 w-4 h-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500 cursor-pointer accent-indigo-600 shrink-0"
+      [checked]="task().completed"
+      (change)="onToggle()"
+      [attr.aria-label]="
+        'Mark ' + task().title + ' as ' + (task().completed ? 'incomplete' : 'complete')
+      "
+    />
+
+    <div class="task-content flex flex-col gap-1.5 flex-1 min-w-0">
+      <div class="task-title-line flex items-center gap-2 flex-wrap">
+        <span
+          class="task-title text-sm font-semibold text-slate-900 wrap-break-word"
+          [class.line-through]="task().completed"
+          [class.text-slate-400]="task().completed"
+        >
+          {{ task().title }}
+        </span>
+      </div>
+
+      <div class="task-meta-line flex items-center flex-wrap gap-2 text-xs text-slate-500">
+        <!-- Priority Badge -->
+        <span
+          class="badge text-[11px] font-medium px-2 py-0.5 rounded-full inline-flex items-center capitalize"
+          [class]="priorityBadgeClass()"
+        >
+          {{ task().priority }}
+        </span>
+
+        <!-- Category Badge -->
+        @if (task().category) {
+          <span
+            class="badge text-[11px] font-medium px-2 py-0.5 rounded-full inline-flex items-center"
+            [class]="categoryBadgeClass()"
+          >
+            {{ task().category }}
+          </span>
+        }
+
+        <!-- Due Date -->
+        @if (task().dueDate) {
+          <span
+            class="due-date-pill font-mono text-[11px] inline-flex items-center gap-1 text-slate-500"
+          >
+            <span>📅</span> {{ task().dueDate }}
+          </span>
+        }
+      </div>
+    </div>
+  </div>
+</div>
