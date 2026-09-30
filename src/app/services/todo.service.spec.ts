@@ -190,6 +190,73 @@ describe('TodoService', () => {
     });
   });
 
+  describe('Sorting and Overdue Reactive Signals', () => {
+    it('should compute overdueTodos and overdueCount correctly and update reactively', () => {
+      expect(service.overdueCount()).toBe(0);
+      expect(service.overdueTodos()).toEqual([]);
+
+      // Add past-due task (2020-01-01 is definitely past)
+      const pastTask = service.addTodo({
+        title: 'Past due task',
+        dueDate: '2020-01-01',
+      });
+
+      expect(service.overdueCount()).toBe(1);
+      expect(service.overdueTodos().map((t) => t.id)).toEqual([pastTask.id]);
+
+      // Add future task (2099-01-01 is definitely future)
+      service.addTodo({
+        title: 'Future task',
+        dueDate: '2099-01-01',
+      });
+
+      // Add task with no due date
+      service.addTodo({
+        title: 'Undated task',
+      });
+
+      expect(service.overdueCount()).toBe(1);
+
+      // Toggling the past-due task to completed should remove it from overdue
+      service.toggleTodo(pastTask.id);
+      expect(service.overdueCount()).toBe(0);
+      expect(service.overdueTodos()).toEqual([]);
+
+      // Toggling it back to active restores overdue state
+      service.toggleTodo(pastTask.id);
+      expect(service.overdueCount()).toBe(1);
+      expect(service.overdueTodos()[0].id).toBe(pastTask.id);
+
+      // Updating dueDate to future clears overdue state
+      service.updateTodo(pastTask.id, { dueDate: '2099-12-31' });
+      expect(service.overdueCount()).toBe(0);
+    });
+
+    it('should compute sortedTodos reactively with overdue items first and completed items last', () => {
+      const future = service.addTodo({
+        title: 'Future task',
+        dueDate: '2099-01-01',
+      });
+      const overdue = service.addTodo({
+        title: 'Overdue task',
+        dueDate: '2020-01-01',
+      });
+      const undated = service.addTodo({
+        title: 'Undated task',
+      });
+
+      // Active overdue should be first
+      let sorted = service.sortedTodos();
+      expect(sorted[0].id).toBe(overdue.id);
+
+      // Toggling overdue task to completed should push it to the bottom
+      service.toggleTodo(overdue.id);
+      sorted = service.sortedTodos();
+      expect(sorted[sorted.length - 1].id).toBe(overdue.id);
+      expect(sorted[sorted.length - 1].completed).toBe(true);
+    });
+  });
+
   describe('Storage Resilience & Error Handling', () => {
     it('should recover gracefully when localStorage contains corrupted JSON', () => {
       window.localStorage.setItem(FOCUSFLOW_STORAGE_KEY, 'corrupted-json-{[');

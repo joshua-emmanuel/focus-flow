@@ -16,7 +16,7 @@
     </div>
 
     <div class="tasks-grid flex flex-col gap-2">
-      @for (task of todoService.todos(); track task.id) {
+      @for (task of todoService.sortedTodos(); track task.id) {
         <app-task-card
           [task]="task"
           (toggle)="todoService.toggleTodo($event)"

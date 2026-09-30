@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { TodoService } from './services/todo.service';
 
 describe('App Component', () => {
   beforeEach(async () => {
@@ -36,5 +37,18 @@ describe('App Component', () => {
 
     app.closeMobileMenu();
     expect(app['isMobileMenuOpen']()).toBe(false);
+  });
+
+  it('should render overdue warning chip in header when overdue tasks exist', async () => {
+    const fixture = TestBed.createComponent(App);
+    const todoService = TestBed.inject(TodoService);
+    todoService.addTodo({ title: 'Overdue task', dueDate: '2020-01-01' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const overdueChip = compiled.querySelector('.overdue-chip');
+    expect(overdueChip).not.toBeNull();
+    expect(overdueChip?.textContent).toContain('1 Overdue');
   });
 });

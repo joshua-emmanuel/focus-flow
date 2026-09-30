@@ -1,6 +1,12 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { CreateTodoInput, Priority, Todo, UpdateTodoInput } from '../models/todo.model';
-import { isValidPriority, sanitizeTodo, validateTodoTitle } from '../utils/todo.utils';
+import {
+  isTaskOverdue,
+  isValidPriority,
+  sanitizeTodo,
+  sortTodos,
+  validateTodoTitle,
+} from '../utils/todo.utils';
 
 export const FOCUSFLOW_STORAGE_KEY = 'focusflow_tasks';
 
@@ -12,9 +18,17 @@ export class TodoService {
 
   readonly todos = this._todos.asReadonly();
 
+  readonly sortedTodos = computed(() => sortTodos(this._todos()));
+
   readonly activeTodos = computed(() => this._todos().filter((todo) => !todo.completed));
 
   readonly completedTodos = computed(() => this._todos().filter((todo) => todo.completed));
+
+  readonly overdueTodos = computed(() =>
+    this.activeTodos().filter((todo) => isTaskOverdue(todo.dueDate, todo.completed))
+  );
+
+  readonly overdueCount = computed(() => this.overdueTodos().length);
 
   readonly activeTodosCount = computed(() => this.activeTodos().length);
 

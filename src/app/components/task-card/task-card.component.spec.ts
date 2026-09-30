@@ -60,4 +60,44 @@ describe('TaskCardComponent', () => {
     const card = fixture.nativeElement.querySelector('.task-card');
     expect(card.classList.contains('is-completed')).toBe(true);
   });
+
+  it('should display overdue badge and red border when task is overdue', () => {
+    const overdueTask: Todo = {
+      ...mockTask,
+      dueDate: '2020-01-01',
+      completed: false,
+    };
+    fixture.componentRef.setInput('task', overdueTask);
+    fixture.detectChanges();
+
+    expect(component.isOverdue()).toBe(true);
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const overdueBadge = compiled.querySelector('.badge-overdue');
+    expect(overdueBadge).not.toBeNull();
+    expect(overdueBadge?.textContent).toContain('Overdue');
+
+    const card = compiled.querySelector('.task-card');
+    expect(card?.classList.contains('border-l-4')).toBe(true);
+    expect(card?.classList.contains('border-l-rose-500')).toBe(true);
+  });
+
+  it('should not display overdue badge when task is completed even if dueDate is in the past', () => {
+    const completedPastTask: Todo = {
+      ...mockTask,
+      dueDate: '2020-01-01',
+      completed: true,
+    };
+    fixture.componentRef.setInput('task', completedPastTask);
+    fixture.detectChanges();
+
+    expect(component.isOverdue()).toBe(false);
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const overdueBadge = compiled.querySelector('.badge-overdue');
+    expect(overdueBadge).toBeNull();
+
+    const card = compiled.querySelector('.task-card');
+    expect(card?.classList.contains('border-l-rose-500')).toBe(false);
+  });
 });

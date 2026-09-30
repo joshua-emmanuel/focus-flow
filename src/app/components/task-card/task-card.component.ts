@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Todo } from '../../models/todo.model';
+import { isTaskOverdue } from '../../utils/todo.utils';
 
 @Component({
   selector: 'app-task-card',
@@ -10,6 +11,10 @@ import { Todo } from '../../models/todo.model';
 export class TaskCardComponent {
   readonly task = input.required<Todo>();
   readonly toggle = output<string>();
+
+  readonly isOverdue = computed(() =>
+    isTaskOverdue(this.task().dueDate, this.task().completed)
+  );
 
   readonly priorityBadgeClass = computed(() => {
     switch (this.task().priority) {

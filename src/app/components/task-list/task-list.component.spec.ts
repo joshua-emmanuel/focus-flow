@@ -58,4 +58,15 @@ describe('TaskListComponent', () => {
 
     expect(todoService.todos()[0].completed).toBe(true);
   });
+
+  it('should render tasks sorted with overdue items appearing first', () => {
+    todoService.addTodo({ title: 'Upcoming task', dueDate: '2099-01-01' });
+    todoService.addTodo({ title: 'Overdue task', dueDate: '2020-01-01' });
+    fixture.detectChanges();
+
+    const titles = fixture.nativeElement.querySelectorAll('.task-title');
+    expect(titles.length).toBe(2);
+    expect(titles[0].textContent).toContain('Overdue task');
+    expect(titles[1].textContent).toContain('Upcoming task');
+  });
 });
