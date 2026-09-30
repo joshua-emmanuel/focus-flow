@@ -1,28 +1,73 @@
 <div class="task-list-container flex flex-col gap-3">
   @if (todoService.todos().length === 0) {
     <!-- Empty State -->
-    <div class="empty-card bg-white border border-slate-200 rounded-2xl py-12 px-6 w-full shadow-xs flex flex-col items-center text-center gap-3" data-testid="empty-state">
-      <div class="target-circle w-14 h-14 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl" aria-hidden="true">🎯</div>
-      <h3 class="empty-title text-lg font-bold text-slate-900 tracking-tight m-0">All tasks completed!</h3>
+    <div
+      class="empty-card bg-white border border-slate-200 rounded-2xl py-12 px-6 w-full shadow-xs flex flex-col items-center text-center gap-3"
+      data-testid="empty-state"
+    >
+      <div
+        class="target-circle w-14 h-14 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl"
+        aria-hidden="true"
+      >
+        🎯
+      </div>
+      <h3 class="empty-title text-lg font-bold text-slate-900 tracking-tight m-0">
+        All tasks completed!
+      </h3>
       <p class="empty-desc text-sm text-slate-500 max-w-sm leading-relaxed m-0">
         You're all caught up for today. Add a new goal above to plan ahead.
       </p>
     </div>
   } @else {
-    <!-- Task List -->
-    <div class="section-header flex justify-between items-center font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600 px-1">
-      <span>⏰ Tasks <span class="item-count-label text-slate-400 font-medium">({{ todoService.activeTodosCount() }} Active / {{ todoService.totalCount() }} Total)</span></span>
+    <!-- Filter Controls -->
+    <app-filter-controls />
+
+    <!-- Task List Header -->
+    <div
+      class="section-header flex justify-between items-center font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600 px-1"
+    >
+      <span>
+        ⏰ Tasks
+        @if (todoService.isFiltered()) {
+          <span class="item-count-label text-indigo-600 font-semibold"
+            >({{ todoService.filteredCount() }} of {{ todoService.totalCount() }} shown)</span
+          >
+        } @else {
+          <span class="item-count-label text-slate-400 font-medium"
+            >({{ todoService.activeTodosCount() }} Active /
+            {{ todoService.totalCount() }} Total)</span
+          >
+        }
+      </span>
       <span class="text-[11px] normal-case text-slate-400 font-normal">Chronological</span>
     </div>
 
-    <div class="tasks-grid flex flex-col gap-2">
-      @for (task of todoService.sortedTodos(); track task.id) {
-        <app-task-card
-          [task]="task"
-          (toggle)="todoService.toggleTodo($event)"
-        />
-      }
-    </div>
+    @if (todoService.filteredTodos().length === 0) {
+      <!-- Contextual Empty State when filters produce no matches -->
+      <div
+        class="no-matches-card bg-white border border-slate-200 rounded-2xl py-10 px-6 w-full shadow-xs flex flex-col items-center text-center gap-2.5"
+        data-testid="no-matches-state"
+      >
+        <div class="text-3xl" aria-hidden="true">🔍</div>
+        <h3 class="text-base font-bold text-slate-900 m-0">No matching tasks found</h3>
+        <p class="text-xs text-slate-500 max-w-sm m-0">
+          No tasks matched your current search and filter criteria. Try adjusting your query or
+          filters.
+        </p>
+        <button
+          type="button"
+          class="mt-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer border-0"
+          (click)="todoService.resetFilters()"
+        >
+          Clear all filters
+        </button>
+      </div>
+    } @else {
+      <div class="tasks-grid flex flex-col gap-2">
+        @for (task of todoService.filteredTodos(); track task.id) {
+          <app-task-card [task]="task" (toggle)="todoService.toggleTodo($event)" />
+        }
+      </div>
+    }
   }
 </div>
-

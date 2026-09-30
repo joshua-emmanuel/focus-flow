@@ -51,4 +51,22 @@ describe('App Component', () => {
     expect(overdueChip).not.toBeNull();
     expect(overdueChip?.textContent).toContain('1 Overdue');
   });
+
+  it('should update category filter when a sidebar list item is clicked', async () => {
+    const fixture = TestBed.createComponent(App);
+    const todoService = TestBed.inject(TodoService);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const workItem = Array.from(compiled.querySelectorAll('li')).find((li) =>
+      li.textContent?.includes('Work')
+    );
+    expect(workItem).toBeDefined();
+
+    workItem?.click();
+    fixture.detectChanges();
+
+    expect(todoService.filterState().categoryFilter).toBe('Work');
+  });
 });

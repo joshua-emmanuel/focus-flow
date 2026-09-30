@@ -257,6 +257,83 @@ describe('TodoService', () => {
     });
   });
 
+  describe('Filtering Reactive Signals & Methods', () => {
+    it('should initialize with default filter state and isFiltered false', () => {
+      expect(service.isFiltered()).toBe(false);
+      expect(service.filterState()).toEqual({
+        searchQuery: '',
+        statusFilter: 'all',
+        categoryFilter: null,
+        priorityFilter: null,
+      });
+      expect(service.filteredCount()).toBe(0);
+    });
+
+    it('should reactively filter todos by search query and update isFiltered', () => {
+      const t1 = service.addTodo({ title: 'Angular testing setup' });
+      const t2 = service.addTodo({ title: 'Cook dinner' });
+
+      expect(service.filteredTodos().length).toBe(2);
+      expect(service.isFiltered()).toBe(false);
+
+      service.setSearchQuery('angular');
+      expect(service.isFiltered()).toBe(true);
+      expect(service.filteredCount()).toBe(1);
+      expect(service.filteredTodos()[0].id).toBe(t1.id);
+
+      service.setSearchQuery('');
+      expect(service.isFiltered()).toBe(false);
+      expect(service.filteredCount()).toBe(2);
+    });
+
+    it('should reactively filter todos by status tab', () => {
+      const t1 = service.addTodo({ title: 'Task 1' });
+      const t2 = service.addTodo({ title: 'Task 2' });
+      service.toggleTodo(t1.id); // t1 completed, t2 active
+
+      service.setStatusFilter('active');
+      expect(service.isFiltered()).toBe(true);
+      expect(service.filteredTodos().map((t) => t.id)).toEqual([t2.id]);
+
+      service.setStatusFilter('completed');
+      expect(service.filteredTodos().map((t) => t.id)).toEqual([t1.id]);
+
+      service.setStatusFilter('all');
+      expect(service.isFiltered()).toBe(false);
+      expect(service.filteredTodos().length).toBe(2);
+    });
+
+    it('should reactively filter by category and priority', () => {
+      service.addTodo({ title: 'T1', category: 'Work', priority: 'high' });
+      service.addTodo({ title: 'T2', category: 'Personal', priority: 'low' });
+      service.addTodo({ title: 'T3', category: 'Work', priority: 'low' });
+
+      service.setCategoryFilter('Work');
+      expect(service.filteredCount()).toBe(2);
+
+      service.setPriorityFilter('high');
+      expect(service.filteredCount()).toBe(1);
+      expect(service.filteredTodos()[0].title).toBe('T1');
+    });
+
+    it('should reset all filters when resetFilters() is called', () => {
+      service.addTodo({ title: 'Task A' });
+      service.setSearchQuery('search');
+      service.setStatusFilter('completed');
+      service.setCategoryFilter('Work');
+      service.setPriorityFilter('high');
+      expect(service.isFiltered()).toBe(true);
+
+      service.resetFilters();
+      expect(service.isFiltered()).toBe(false);
+      expect(service.filterState().searchQuery).toBe('');
+      expect(service.filterState().statusFilter).toBe('all');
+      expect(service.filterState().categoryFilter).toBeNull();
+      expect(service.filterState().priorityFilter).toBeNull();
+      expect(service.filteredCount()).toBe(1);
+    });
+  });
+
   describe('Storage Resilience & Error Handling', () => {
     it('should recover gracefully when localStorage contains corrupted JSON', () => {
       window.localStorage.setItem(FOCUSFLOW_STORAGE_KEY, 'corrupted-json-{[');

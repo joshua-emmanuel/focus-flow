@@ -8,8 +8,9 @@ import {
   isTaskOverdue,
   isTaskDueToday,
   sortTodos,
+  filterTodos,
 } from './todo.utils';
-import { Todo } from '../models/todo.model';
+import { FilterState, Todo } from '../models/todo.model';
 
 describe('Todo Utils Validation & Sanitization', () => {
   describe('isValidPriority', () => {
@@ -339,6 +340,107 @@ describe('Todo Utils Validation & Sanitization', () => {
 
       expect(original).toEqual(copy);
       expect(result).not.toBe(original);
+    });
+  });
+
+  describe('filterTodos', () => {
+    const tasks: Todo[] = [
+      {
+        id: 't-1',
+        title: 'Review Angular pull request',
+        completed: false,
+        priority: 'high',
+        dueDate: '2026-10-01',
+        category: 'Work',
+        createdAt: '2026-09-01T10:00:00.000Z',
+      },
+      {
+        id: 't-2',
+        title: 'Buy groceries and fruits',
+        completed: false,
+        priority: 'medium',
+        dueDate: '2026-10-15',
+        category: 'Personal',
+        createdAt: '2026-09-10T10:00:00.000Z',
+      },
+      {
+        id: 't-3',
+        title: 'Draft architecture roadmap',
+        completed: true,
+        priority: 'high',
+        dueDate: null,
+        category: 'Projects',
+        createdAt: '2026-09-15T10:00:00.000Z',
+      },
+      {
+        id: 't-4',
+        title: 'Yoga workout session',
+        completed: true,
+        priority: 'low',
+        dueDate: '2026-09-20',
+        category: 'Personal',
+        createdAt: '2026-09-20T10:00:00.000Z',
+      },
+    ];
+
+    const defaultFilter: FilterState = {
+      searchQuery: '',
+      statusFilter: 'all',
+      categoryFilter: null,
+      priorityFilter: null,
+    };
+
+    it('should return all tasks when default filter is applied', () => {
+      const result = filterTodos(tasks, defaultFilter);
+      expect(result.length).toBe(4);
+    });
+
+    it('should filter by status: active', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, statusFilter: 'active' });
+      expect(result.map((t) => t.id)).toEqual(['t-1', 't-2']);
+    });
+
+    it('should filter by status: completed', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, statusFilter: 'completed' });
+      expect(result.map((t) => t.id)).toEqual(['t-3', 't-4']);
+    });
+
+    it('should filter by search query matching title case-insensitively', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, searchQuery: 'angular' });
+      expect(result.map((t) => t.id)).toEqual(['t-1']);
+    });
+
+    it('should filter by search query matching category case-insensitively', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, searchQuery: 'personal' });
+      expect(result.map((t) => t.id)).toEqual(['t-2', 't-4']);
+    });
+
+    it('should filter by categoryFilter exactly (case-insensitive)', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, categoryFilter: 'work' });
+      expect(result.map((t) => t.id)).toEqual(['t-1']);
+    });
+
+    it('should filter by priorityFilter exactly', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, priorityFilter: 'high' });
+      expect(result.map((t) => t.id)).toEqual(['t-1', 't-3']);
+    });
+
+    it('should combine multiple filter criteria simultaneously', () => {
+      const result = filterTodos(tasks, {
+        searchQuery: 'groceries',
+        statusFilter: 'active',
+        categoryFilter: 'Personal',
+        priorityFilter: 'medium',
+      });
+      expect(result.map((t) => t.id)).toEqual(['t-2']);
+    });
+
+    it('should return empty array if no tasks match criteria', () => {
+      const result = filterTodos(tasks, {
+        ...defaultFilter,
+        searchQuery: 'non-existent-keyword-xyz',
+      });
+      expect(result).toEqual([]);
     });
   });
 });

@@ -1,6 +1,14 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { CreateTodoInput, Priority, Todo, UpdateTodoInput } from '../models/todo.model';
 import {
+  CreateTodoInput,
+  FilterState,
+  Priority,
+  Todo,
+  UpdateTodoInput,
+} from '../models/todo.model';
+import {
+  filterTodos,
+  getTodayDateString,
   isTaskOverdue,
   isValidPriority,
   sanitizeTodo,
@@ -10,15 +18,41 @@ import {
 
 export const FOCUSFLOW_STORAGE_KEY = 'focusflow_tasks';
 
+export const INITIAL_FILTER_STATE: FilterState = {
+  searchQuery: '',
+  statusFilter: 'all',
+  categoryFilter: null,
+  priorityFilter: null,
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private readonly _todos = signal<Todo[]>([]);
+  private readonly _filterState = signal<FilterState>({ ...INITIAL_FILTER_STATE });
 
   readonly todos = this._todos.asReadonly();
+  readonly filterState = this._filterState.asReadonly();
+
+  readonly isFiltered = computed(() => {
+    const f = this._filterState();
+    return Boolean(
+      f.searchQuery.trim().length > 0 ||
+      f.statusFilter !== 'all' ||
+      f.categoryFilter !== null ||
+      f.priorityFilter !== null
+    );
+  });
 
   readonly sortedTodos = computed(() => sortTodos(this._todos()));
+
+  readonly filteredTodos = computed(() => {
+    const filtered = filterTodos(this._todos(), this._filterState());
+    return sortTodos(filtered);
+  });
+
+  readonly filteredCount = computed(() => this.filteredTodos().length);
 
   readonly activeTodos = computed(() => this._todos().filter((todo) => !todo.completed));
 
@@ -29,6 +63,14 @@ export class TodoService {
   );
 
   readonly overdueCount = computed(() => this.overdueTodos().length);
+
+  readonly upcomingTodos = computed(() =>
+    this.activeTodos().filter(
+      (todo) => todo.dueDate !== null && todo.dueDate > getTodayDateString()
+    )
+  );
+
+  readonly upcomingTodosCount = computed(() => this.upcomingTodos().length);
 
   readonly activeTodosCount = computed(() => this.activeTodos().length);
 
@@ -212,6 +254,41 @@ export class TodoService {
   clearAll(): void {
     this._todos.set([]);
     this.persistToStorage([]);
+  }
+
+  /**
+   * Updates the search query filter.
+   */
+  setSearchQuery(query: string): void {
+    this._filterState.update((current) => ({ ...current, searchQuery: query }));
+  }
+
+  /**
+   * Updates the completion status filter tab ('all' | 'active' | 'completed').
+   */
+  setStatusFilter(status: 'all' | 'active' | 'completed'): void {
+    this._filterState.update((current) => ({ ...current, statusFilter: status }));
+  }
+
+  /**
+   * Updates the category filter (null matches all categories).
+   */
+  setCategoryFilter(category: string | null): void {
+    this._filterState.update((current) => ({ ...current, categoryFilter: category }));
+  }
+
+  /**
+   * Updates the priority filter (null matches all priorities).
+   */
+  setPriorityFilter(priority: Priority | null): void {
+    this._filterState.update((current) => ({ ...current, priorityFilter: priority }));
+  }
+
+  /**
+   * Resets all filter settings back to initial state.
+   */
+  resetFilters(): void {
+    this._filterState.set({ ...INITIAL_FILTER_STATE });
   }
 
   /**

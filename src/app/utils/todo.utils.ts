@@ -1,4 +1,5 @@
 import {
+  FilterState,
   Priority,
   TitleValidationResult,
   Todo,
@@ -178,4 +179,48 @@ export function sortTodos(
 
   return [...overdue, ...dueToday, ...upcoming, ...noDueDate, ...completed];
 }
+
+/**
+ * Filters a list of todos based on text search, completion status, category, and priority.
+ */
+export function filterTodos(todos: readonly Todo[], filter: FilterState): Todo[] {
+  const query = filter.searchQuery.trim().toLowerCase();
+  const categoryFilter = filter.categoryFilter ? filter.categoryFilter.trim().toLowerCase() : null;
+
+  return todos.filter((todo) => {
+    // 1. Status Filter
+    if (filter.statusFilter === 'active' && todo.completed) {
+      return false;
+    }
+    if (filter.statusFilter === 'completed' && !todo.completed) {
+      return false;
+    }
+
+    // 2. Category Filter
+    if (categoryFilter !== null) {
+      if (!todo.category || todo.category.trim().toLowerCase() !== categoryFilter) {
+        return false;
+      }
+    }
+
+    // 3. Priority Filter
+    if (filter.priorityFilter !== null) {
+      if (todo.priority !== filter.priorityFilter) {
+        return false;
+      }
+    }
+
+    // 4. Text Search Query (matches title or category)
+    if (query.length > 0) {
+      const matchTitle = todo.title.toLowerCase().includes(query);
+      const matchCategory = todo.category ? todo.category.toLowerCase().includes(query) : false;
+      if (!matchTitle && !matchCategory) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
 

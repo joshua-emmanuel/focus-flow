@@ -1,0 +1,160 @@
+<div class="filter-controls-container flex flex-col gap-3 p-4 bg-white border border-slate-200 rounded-xl shadow-xs">
+  <!-- Top: Search Bar -->
+  <div class="search-bar-row flex items-center gap-2">
+    <div class="relative flex-1">
+      <span
+        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-sm"
+        aria-hidden="true"
+      >
+        🔍
+      </span>
+      <input
+        type="text"
+        class="search-input w-full pl-9 pr-8 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+        placeholder="Search tasks by title or category..."
+        [value]="todoService.filterState().searchQuery"
+        (input)="onSearchChange($event)"
+        aria-label="Search tasks"
+      />
+      @if (todoService.filterState().searchQuery) {
+        <button
+          type="button"
+          class="clear-search-btn absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer bg-transparent border-0"
+          (click)="clearSearch()"
+          aria-label="Clear search query"
+        >
+          ✕
+        </button>
+      }
+    </div>
+
+    @if (todoService.isFiltered()) {
+      <button
+        type="button"
+        class="reset-filters-btn text-xs font-semibold px-2.5 py-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-rose-200 cursor-pointer flex items-center gap-1 shrink-0"
+        (click)="resetAll()"
+        aria-label="Reset all filters"
+      >
+        <span>✕</span> Reset
+      </button>
+    }
+  </div>
+
+  <!-- Bottom: Filter Tabs & Chips -->
+  <div class="filters-row flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-slate-100">
+    <!-- Status Tabs -->
+    <div class="status-tabs flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-xs" role="tablist">
+      <button
+        type="button"
+        class="status-tab px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer border-0"
+        [class.bg-white]="todoService.filterState().statusFilter === 'all'"
+        [class.text-indigo-700]="todoService.filterState().statusFilter === 'all'"
+        [class.font-semibold]="todoService.filterState().statusFilter === 'all'"
+        [class.shadow-xs]="todoService.filterState().statusFilter === 'all'"
+        [class.text-slate-600]="todoService.filterState().statusFilter !== 'all'"
+        (click)="setStatus('all')"
+        role="tab"
+        [attr.aria-selected]="todoService.filterState().statusFilter === 'all'"
+      >
+        All ({{ todoService.totalCount() }})
+      </button>
+      <button
+        type="button"
+        class="status-tab px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer border-0"
+        [class.bg-white]="todoService.filterState().statusFilter === 'active'"
+        [class.text-indigo-700]="todoService.filterState().statusFilter === 'active'"
+        [class.font-semibold]="todoService.filterState().statusFilter === 'active'"
+        [class.shadow-xs]="todoService.filterState().statusFilter === 'active'"
+        [class.text-slate-600]="todoService.filterState().statusFilter !== 'active'"
+        (click)="setStatus('active')"
+        role="tab"
+        [attr.aria-selected]="todoService.filterState().statusFilter === 'active'"
+      >
+        Active ({{ todoService.activeTodosCount() }})
+      </button>
+      <button
+        type="button"
+        class="status-tab px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer border-0"
+        [class.bg-white]="todoService.filterState().statusFilter === 'completed'"
+        [class.text-indigo-700]="todoService.filterState().statusFilter === 'completed'"
+        [class.font-semibold]="todoService.filterState().statusFilter === 'completed'"
+        [class.shadow-xs]="todoService.filterState().statusFilter === 'completed'"
+        [class.text-slate-600]="todoService.filterState().statusFilter !== 'completed'"
+        (click)="setStatus('completed')"
+        role="tab"
+        [attr.aria-selected]="todoService.filterState().statusFilter === 'completed'"
+      >
+        Completed ({{ todoService.completedTodosCount() }})
+      </button>
+    </div>
+
+    <!-- Category & Priority Filters -->
+    <div class="category-priority-chips flex items-center flex-wrap gap-2 text-xs">
+      <!-- Category Chips -->
+      <div class="category-chips flex items-center gap-1">
+        <span class="text-[11px] font-medium text-slate-400">Category:</span>
+        <button
+          type="button"
+          class="cat-chip text-[11px] px-2 py-0.5 rounded-full border cursor-pointer transition-colors"
+          [class.bg-indigo-600]="todoService.filterState().categoryFilter === null"
+          [class.text-white]="todoService.filterState().categoryFilter === null"
+          [class.border-indigo-600]="todoService.filterState().categoryFilter === null"
+          [class.bg-slate-50]="todoService.filterState().categoryFilter !== null"
+          [class.text-slate-600]="todoService.filterState().categoryFilter !== null"
+          [class.border-slate-200]="todoService.filterState().categoryFilter !== null"
+          (click)="setCategory(null)"
+        >
+          All
+        </button>
+        @for (cat of categories; track cat) {
+          <button
+            type="button"
+            class="cat-chip text-[11px] px-2 py-0.5 rounded-full border cursor-pointer transition-colors"
+            [class.bg-indigo-600]="todoService.filterState().categoryFilter === cat"
+            [class.text-white]="todoService.filterState().categoryFilter === cat"
+            [class.border-indigo-600]="todoService.filterState().categoryFilter === cat"
+            [class.bg-slate-50]="todoService.filterState().categoryFilter !== cat"
+            [class.text-slate-600]="todoService.filterState().categoryFilter !== cat"
+            [class.border-slate-200]="todoService.filterState().categoryFilter !== cat"
+            (click)="setCategory(cat)"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
+
+      <!-- Priority Chips -->
+      <div class="priority-chips flex items-center gap-1 ml-1">
+        <span class="text-[11px] font-medium text-slate-400">Priority:</span>
+        <button
+          type="button"
+          class="prio-chip text-[11px] px-2 py-0.5 rounded-full border cursor-pointer transition-colors"
+          [class.bg-slate-800]="todoService.filterState().priorityFilter === null"
+          [class.text-white]="todoService.filterState().priorityFilter === null"
+          [class.border-slate-800]="todoService.filterState().priorityFilter === null"
+          [class.bg-slate-50]="todoService.filterState().priorityFilter !== null"
+          [class.text-slate-600]="todoService.filterState().priorityFilter !== null"
+          [class.border-slate-200]="todoService.filterState().priorityFilter !== null"
+          (click)="setPriority(null)"
+        >
+          All
+        </button>
+        @for (prio of priorities; track prio) {
+          <button
+            type="button"
+            class="prio-chip text-[11px] px-2 py-0.5 rounded-full border cursor-pointer transition-colors capitalize"
+            [class.bg-slate-800]="todoService.filterState().priorityFilter === prio"
+            [class.text-white]="todoService.filterState().priorityFilter === prio"
+            [class.border-slate-800]="todoService.filterState().priorityFilter === prio"
+            [class.bg-slate-50]="todoService.filterState().priorityFilter !== prio"
+            [class.text-slate-600]="todoService.filterState().priorityFilter !== prio"
+            [class.border-slate-200]="todoService.filterState().priorityFilter !== prio"
+            (click)="setPriority(prio)"
+          >
+            {{ prio }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

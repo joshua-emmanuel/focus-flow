@@ -69,4 +69,39 @@ describe('TaskListComponent', () => {
     expect(titles[0].textContent).toContain('Overdue task');
     expect(titles[1].textContent).toContain('Upcoming task');
   });
+
+  it('should render filter controls and filter task cards dynamically', () => {
+    todoService.addTodo({ title: 'Buy milk', category: 'Personal' });
+    todoService.addTodo({ title: 'Write tests', category: 'Work' });
+    fixture.detectChanges();
+
+    const filterControls = fixture.nativeElement.querySelector('app-filter-controls');
+    expect(filterControls).not.toBeNull();
+
+    todoService.setSearchQuery('milk');
+    fixture.detectChanges();
+
+    const cards = fixture.nativeElement.querySelectorAll('app-task-card');
+    expect(cards.length).toBe(1);
+    expect(cards[0].textContent).toContain('Buy milk');
+  });
+
+  it('should render contextual no-matches empty state when filters yield zero results and allow reset', () => {
+    todoService.addTodo({ title: 'Task 1' });
+    fixture.detectChanges();
+
+    todoService.setSearchQuery('non-existent');
+    fixture.detectChanges();
+
+    const noMatchesCard = fixture.nativeElement.querySelector('[data-testid="no-matches-state"]');
+    expect(noMatchesCard).not.toBeNull();
+    expect(noMatchesCard.textContent).toContain('No matching tasks found');
+
+    const clearBtn = noMatchesCard.querySelector('button');
+    clearBtn.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="no-matches-state"]')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-card').length).toBe(1);
+  });
 });

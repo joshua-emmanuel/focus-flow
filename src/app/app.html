@@ -53,7 +53,28 @@
       </div>
       <ul class="list-none flex flex-col gap-1 p-0 m-0">
         <li
-          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-700 cursor-pointer"
+          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs cursor-pointer transition-colors"
+          [class.bg-indigo-50]="
+            todoService.filterState().statusFilter === 'active' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.text-indigo-700]="
+            todoService.filterState().statusFilter === 'active' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.font-semibold]="
+            todoService.filterState().statusFilter === 'active' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.text-slate-600]="
+            todoService.filterState().statusFilter !== 'active' ||
+            todoService.filterState().categoryFilter !== null
+          "
+          (click)="
+            todoService.setStatusFilter('active');
+            todoService.setCategoryFilter(null);
+            closeMobileMenu()
+          "
         >
           <div class="flex items-center gap-2"><span>☼</span> Today</div>
           <span
@@ -69,11 +90,32 @@
           <span
             class="text-[11px] font-mono bg-white border border-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full font-semibold"
           >
-            0
+            {{ todoService.upcomingTodosCount() }}
           </span>
         </li>
         <li
-          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
+          class="flex items-center justify-between px-2.5 py-2 rounded-md text-xs cursor-pointer transition-colors"
+          [class.bg-indigo-50]="
+            todoService.filterState().statusFilter === 'all' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.text-indigo-700]="
+            todoService.filterState().statusFilter === 'all' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.font-semibold]="
+            todoService.filterState().statusFilter === 'all' &&
+            todoService.filterState().categoryFilter === null
+          "
+          [class.text-slate-600]="
+            todoService.filterState().statusFilter !== 'all' ||
+            todoService.filterState().categoryFilter !== null
+          "
+          (click)="
+            todoService.setStatusFilter('all');
+            todoService.setCategoryFilter(null);
+            closeMobileMenu()
+          "
         >
           <div class="flex items-center gap-2"><span>≡</span> All Tasks</div>
           <span
@@ -91,19 +133,34 @@
       </div>
       <ul class="list-none flex flex-col gap-1 p-0 m-0">
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
+          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Work'"
+          [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Work'"
+          [class.font-semibold]="todoService.filterState().categoryFilter === 'Work'"
+          [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Work'"
+          (click)="todoService.setCategoryFilter('Work'); closeMobileMenu()"
         >
           <span class="w-2 h-2 rounded-full bg-blue-500"></span>
           <span>Work</span>
         </li>
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
+          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Personal'"
+          [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Personal'"
+          [class.font-semibold]="todoService.filterState().categoryFilter === 'Personal'"
+          [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Personal'"
+          (click)="todoService.setCategoryFilter('Personal'); closeMobileMenu()"
         >
           <span class="w-2 h-2 rounded-full bg-amber-500"></span>
           <span>Personal</span>
         </li>
         <li
-          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 cursor-pointer transition-colors"
+          class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          [class.bg-indigo-50]="todoService.filterState().categoryFilter === 'Projects'"
+          [class.text-indigo-700]="todoService.filterState().categoryFilter === 'Projects'"
+          [class.font-semibold]="todoService.filterState().categoryFilter === 'Projects'"
+          [class.text-slate-600]="todoService.filterState().categoryFilter !== 'Projects'"
+          (click)="todoService.setCategoryFilter('Projects'); closeMobileMenu()"
         >
           <span class="w-2 h-2 rounded-full bg-slate-500"></span>
           <span>Projects</span>
