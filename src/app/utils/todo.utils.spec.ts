@@ -405,6 +405,11 @@ describe('Todo Utils Validation & Sanitization', () => {
       expect(result.map((t) => t.id)).toEqual(['t-3', 't-4']);
     });
 
+    it('should filter by status: upcoming', () => {
+      const result = filterTodos(tasks, { ...defaultFilter, statusFilter: 'upcoming' });
+      expect(result.map((t) => t.id)).toEqual(['t-2']);
+    });
+
     it('should filter by search query matching title case-insensitively', () => {
       const result = filterTodos(tasks, { ...defaultFilter, searchQuery: 'angular' });
       expect(result.map((t) => t.id)).toEqual(['t-1']);

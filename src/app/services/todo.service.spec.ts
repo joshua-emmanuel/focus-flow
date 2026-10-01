@@ -298,9 +298,15 @@ describe('TodoService', () => {
       service.setStatusFilter('completed');
       expect(service.filteredTodos().map((t) => t.id)).toEqual([t1.id]);
 
+      // Add upcoming task
+      const t3 = service.addTodo({ title: 'Upcoming Task', dueDate: '2099-01-01' });
+      service.setStatusFilter('upcoming');
+      expect(service.isFiltered()).toBe(true);
+      expect(service.filteredTodos().map((t) => t.id)).toEqual([t3.id]);
+
       service.setStatusFilter('all');
       expect(service.isFiltered()).toBe(false);
-      expect(service.filteredTodos().length).toBe(2);
+      expect(service.filteredTodos().length).toBe(3);
     });
 
     it('should reactively filter by category and priority', () => {

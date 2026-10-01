@@ -29,7 +29,7 @@ export interface UpdateTodoInput {
 
 export interface FilterState {
   searchQuery: string;
-  statusFilter: 'all' | 'active' | 'completed';
+  statusFilter: 'all' | 'active' | 'completed' | 'upcoming';
   categoryFilter: string | null;
   priorityFilter: Priority | null;
 }

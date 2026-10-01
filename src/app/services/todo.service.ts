@@ -264,9 +264,9 @@ export class TodoService {
   }
 
   /**
-   * Updates the completion status filter tab ('all' | 'active' | 'completed').
+   * Updates the completion status filter tab ('all' | 'active' | 'completed' | 'upcoming').
    */
-  setStatusFilter(status: 'all' | 'active' | 'completed'): void {
+  setStatusFilter(status: 'all' | 'active' | 'completed' | 'upcoming'): void {
     this._filterState.update((current) => ({ ...current, statusFilter: status }));
   }
 

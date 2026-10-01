@@ -195,6 +195,11 @@ export function filterTodos(todos: readonly Todo[], filter: FilterState): Todo[]
     if (filter.statusFilter === 'completed' && !todo.completed) {
       return false;
     }
+    if (filter.statusFilter === 'upcoming') {
+      if (todo.completed || !todo.dueDate || todo.dueDate <= getTodayDateString()) {
+        return false;
+      }
+    }
 
     // 2. Category Filter
     if (categoryFilter !== null) {

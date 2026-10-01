@@ -82,6 +82,7 @@ describe('TaskCardComponent', () => {
     const card = compiled.querySelector('.task-card');
     expect(card?.classList.contains('border-l-4')).toBe(true);
     expect(card?.classList.contains('border-l-rose-500')).toBe(true);
+    expect(card?.classList.contains('dark:border-l-rose-500')).toBe(true);
   });
 
   it('should not display overdue badge when task is completed even if dueDate is in the past', () => {
@@ -101,6 +102,7 @@ describe('TaskCardComponent', () => {
 
     const card = compiled.querySelector('.task-card');
     expect(card?.classList.contains('border-l-rose-500')).toBe(false);
+    expect(card?.classList.contains('dark:border-l-rose-500')).toBe(false);
   });
 
   it('should toggle delete confirmation state and call deleteTodo on confirm', () => {

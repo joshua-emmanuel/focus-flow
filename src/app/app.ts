@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { TodoService } from './services/todo.service';
+import { ThemeService } from './services/theme.service';
 import { CadenceCardComponent } from './components/cadence-card/cadence-card.component';
 import { QuickAddComponent } from './components/quick-add/quick-add.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -11,6 +12,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
 })
 export class App {
   protected readonly todoService = inject(TodoService);
+  protected readonly themeService = inject(ThemeService);
   protected readonly title = signal('FocusFlow');
   protected readonly isMobileMenuOpen = signal(false);
 

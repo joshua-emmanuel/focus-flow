@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { TodoService } from './services/todo.service';
+import { ThemeService } from './services/theme.service';
 
 describe('App Component', () => {
   beforeEach(async () => {
@@ -70,6 +71,23 @@ describe('App Component', () => {
     expect(todoService.filterState().categoryFilter).toBe('Work');
   });
 
+  it('should activate upcoming filter when upcoming smart view is clicked in sidebar', async () => {
+    const fixture = TestBed.createComponent(App);
+    const todoService = TestBed.inject(TodoService);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const upcomingItem = compiled.querySelector('.upcoming-smart-view') as HTMLElement;
+    expect(upcomingItem).not.toBeNull();
+
+    upcomingItem.click();
+    fixture.detectChanges();
+
+    expect(todoService.filterState().statusFilter).toBe('upcoming');
+    expect(todoService.filterState().categoryFilter).toBeNull();
+  });
+
   it('should render CadenceCardComponent and reflect real-time metrics across app', async () => {
     const fixture = TestBed.createComponent(App);
     const todoService = TestBed.inject(TodoService);
@@ -108,5 +126,34 @@ describe('App Component', () => {
     expect(todoService.todos().length).toBe(1);
     expect(cadenceCard?.querySelector('.active-tasks-title')?.textContent).toContain('1 Active Task Left');
     expect(cadenceCard?.querySelector('.fraction-label')?.textContent).toContain('0 / 1 Done');
+  });
+
+  it('should toggle theme when theme toggle button in header is clicked', async () => {
+    const fixture = TestBed.createComponent(App);
+    const themeService = TestBed.inject(ThemeService);
+    themeService.setTheme('light');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const themeBtn = compiled.querySelector('.theme-toggle-btn') as HTMLButtonElement;
+    expect(themeBtn).not.toBeNull();
+    expect(themeBtn.getAttribute('aria-label')).toBe('Switch to dark mode');
+
+    themeBtn.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(themeService.isDark()).toBe(true);
+    expect(themeBtn.getAttribute('aria-label')).toBe('Switch to light mode');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    themeBtn.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(themeService.isDark()).toBe(false);
+    expect(themeBtn.getAttribute('aria-label')).toBe('Switch to dark mode');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });

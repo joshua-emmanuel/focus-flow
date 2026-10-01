@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
 @import 'tailwindcss';
 
+@custom-variant dark (&:is(.dark, .dark *));
+
 @theme {
   --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
@@ -84,6 +86,68 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+}
+
+.dark {
+  /* Surfaces */
+  --bg: #090d16;
+  --sidebar-bg: #0f172a;
+  --surface: #0f172a;
+  --surface-hover: #1e293b;
+  --surface-subtle: #1e293b;
+  --surface-active: #334155;
+
+  /* Borders */
+  --border: #1e293b;
+  --border-light: #334155;
+  --border-focus: #6366f1;
+
+  /* Typography Colors */
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --faint: #64748b;
+
+  /* Primary Brand (FocusFlow Indigo) */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #1e1b4b;
+  --primary-border: #3730a3;
+  --primary-ink: #ffffff;
+
+  /* Dark CTA Buttons */
+  --btn-dark: #f8fafc;
+  --btn-dark-hover: #e2e8f0;
+
+  /* Priority & Status Badges */
+  --badge-high-bg: rgba(239, 68, 68, 0.15);
+  --badge-high-text: #f87171;
+  --badge-high-border: rgba(239, 68, 68, 0.3);
+
+  --badge-med-bg: rgba(245, 158, 11, 0.15);
+  --badge-med-text: #fbbf24;
+  --badge-med-border: rgba(245, 158, 11, 0.3);
+
+  --badge-low-bg: rgba(100, 116, 139, 0.15);
+  --badge-low-text: #94a3b8;
+  --badge-low-border: rgba(100, 116, 139, 0.3);
+
+  --badge-overdue-bg: rgba(239, 68, 68, 0.2);
+  --badge-overdue-text: #fca5a5;
+  --badge-overdue-border: rgba(239, 68, 68, 0.4);
+
+  /* Category Badges */
+  --badge-work-bg: rgba(99, 102, 241, 0.2);
+  --badge-work-text: #a5b4fc;
+  --badge-work-border: rgba(99, 102, 241, 0.35);
+
+  --badge-personal-bg: rgba(245, 158, 11, 0.2);
+  --badge-personal-text: #fde68a;
+  --badge-personal-border: rgba(245, 158, 11, 0.35);
+
+  --badge-project-bg: rgba(148, 163, 184, 0.15);
+  --badge-project-text: #cbd5e1;
+  --badge-project-border: rgba(148, 163, 184, 0.3);
 }
 
 * {

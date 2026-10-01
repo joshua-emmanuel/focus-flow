@@ -1,10 +1,10 @@
 <div
-  class="cadence-card bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-wrap sm:flex-nowrap items-center justify-between gap-4"
+  class="cadence-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-wrap sm:flex-nowrap items-center justify-between gap-4"
 >
   <!-- Left Column: Icon + Text -->
   <div class="flex items-center gap-3.5 min-w-0">
     <div
-      class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0"
+      class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0"
       aria-hidden="true"
     >
       <svg
@@ -24,11 +24,11 @@
 
     <div class="flex flex-col gap-0.5 min-w-0">
       <h3
-        class="active-tasks-title font-bold text-slate-900 text-sm sm:text-base leading-tight m-0 truncate"
+        class="active-tasks-title font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-tight m-0 truncate"
       >
         {{ activeTasksText() }}
       </h3>
-      <span class="cadence-subtitle text-xs text-slate-500 font-medium">
+      <span class="cadence-subtitle text-xs text-slate-500 dark:text-slate-400 font-medium">
         {{ todoService.completionRate() }}% daily cadence finished
       </span>
     </div>
@@ -37,16 +37,16 @@
   <!-- Middle Column: Completion Rate Progress Bar -->
   <div class="flex flex-col gap-1.5 flex-1 min-w-50 max-w-full sm:max-w-xs md:max-w-sm">
     <div class="flex items-center justify-between text-xs">
-      <span class="font-mono text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+      <span class="font-mono text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
         Completion Rate
       </span>
-      <span class="fraction-label font-mono font-semibold text-slate-600">
+      <span class="fraction-label font-mono font-semibold text-slate-600 dark:text-slate-300">
         {{ todoService.completedTodosCount() }} / {{ todoService.totalCount() }} Done
       </span>
     </div>
 
     <div
-      class="progress-track w-full h-2 bg-slate-100 rounded-full overflow-hidden"
+      class="progress-track w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
       role="progressbar"
       [attr.aria-valuenow]="todoService.completionRate()"
       aria-valuemin="0"
@@ -54,7 +54,7 @@
       [attr.aria-label]="todoService.completionRate() + '% tasks completed'"
     >
       <div
-        class="progress-bar-fill h-full bg-indigo-600 rounded-full transition-all duration-300 ease-out"
+        class="progress-bar-fill h-full bg-indigo-600 dark:bg-indigo-500 rounded-full transition-all duration-300 ease-out"
         [style.width.%]="todoService.completionRate()"
       ></div>
     </div>
@@ -64,14 +64,14 @@
   <div class="flex items-center shrink-0">
     @if (isConfirmingClear()) {
       <div
-        class="clear-confirm-box inline-flex items-center gap-1.5 bg-rose-50 border border-rose-200 rounded-lg px-2.5 py-1 text-xs"
+        class="clear-confirm-box inline-flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-lg px-2.5 py-1 text-xs"
         role="group"
         aria-label="Confirm clear all completed tasks"
       >
-        <span class="text-rose-700 font-semibold text-[11px]">Clear all done?</span>
+        <span class="text-rose-700 dark:text-rose-300 font-semibold text-[11px]">Clear all done?</span>
         <button
           type="button"
-          class="confirm-clear-btn text-[11px] font-semibold px-2 py-0.5 rounded bg-rose-600 text-white hover:bg-rose-700 transition-colors cursor-pointer border-0"
+          class="confirm-clear-btn text-[11px] font-semibold px-2 py-0.5 rounded bg-rose-600 dark:bg-rose-700 text-white hover:bg-rose-700 dark:hover:bg-rose-600 transition-colors cursor-pointer border-0"
           (click)="confirmClear()"
           aria-label="Confirm clear completed tasks"
         >
@@ -79,7 +79,7 @@
         </button>
         <button
           type="button"
-          class="cancel-clear-btn text-[11px] font-medium px-2 py-0.5 rounded bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
+          class="cancel-clear-btn text-[11px] font-medium px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
           (click)="cancelClear()"
           aria-label="Cancel clear completed tasks"
         >
@@ -89,7 +89,7 @@
     } @else {
       <button
         type="button"
-        class="clear-done-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-rose-100 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-600 disabled:cursor-not-allowed"
+        class="clear-done-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-rose-900/50 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-600 dark:disabled:hover:text-slate-400 disabled:cursor-not-allowed"
         [disabled]="todoService.completedTodosCount() === 0"
         (click)="startClear()"
         aria-label="Clear all completed tasks"
