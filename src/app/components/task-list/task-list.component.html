@@ -17,7 +17,16 @@
       <p class="empty-desc text-sm text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed m-0">
         You're all caught up for today. Add a new goal above to plan ahead.
       </p>
+      <button
+        type="button"
+        class="load-sample-btn mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 underline underline-offset-2 cursor-pointer bg-transparent border-0 p-0"
+        (click)="todoService.loadSampleData()"
+        data-testid="load-sample-btn"
+      >
+        ✨ Load sample data
+      </button>
     </div>
+
   } @else {
     <!-- Filter Controls -->
     <app-filter-controls />

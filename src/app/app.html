@@ -311,6 +311,27 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        @if (todoService.totalCount() > 0) {
+          <button
+            type="button"
+            class="reset-btn hidden sm:inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer bg-transparent border-0 p-0"
+            (click)="confirmReset()"
+            data-testid="reset-btn"
+            title="Clear all tasks and return to empty state"
+          >
+            🗑 Reset to empty
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="header-load-sample-btn hidden sm:inline-flex items-center gap-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 transition-colors cursor-pointer bg-transparent border-0 p-0"
+            (click)="todoService.loadSampleData()"
+            data-testid="header-load-sample-btn"
+            title="Populate the app with sample tasks"
+          >
+            ✨ Load sample data
+          </button>
+        }
         <button
           type="button"
           (click)="themeService.toggleTheme()"
@@ -325,6 +346,7 @@
           }
         </button>
       </div>
+
     </header>
 
     <div class="p-4 sm:p-8 max-w-4xl w-full mx-auto flex flex-col gap-5">

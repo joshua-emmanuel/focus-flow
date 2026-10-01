@@ -155,4 +155,21 @@ describe('TaskListComponent', () => {
     expect(titles[0].textContent).toContain('Standard Task');
     expect(titles[1].textContent).toContain('Upcoming Task');
   });
+
+  it('should show a "Load sample data" button in the empty state', () => {
+    // Starts empty
+    const btn = fixture.nativeElement.querySelector('[data-testid="load-sample-btn"]');
+    expect(btn).not.toBeNull();
+    expect(btn.textContent).toContain('Load sample data');
+  });
+
+  it('should populate tasks when the "Load sample data" button is clicked', () => {
+    const btn = fixture.nativeElement.querySelector('[data-testid="load-sample-btn"]') as HTMLButtonElement;
+    btn.click();
+    fixture.detectChanges();
+
+    expect(todoService.todos().length).toBeGreaterThan(0);
+    // Empty state card should be gone
+    expect(fixture.nativeElement.querySelector('[data-testid="empty-state"]')).toBeNull();
+  });
 });

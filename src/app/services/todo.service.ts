@@ -15,6 +15,7 @@ import {
   sortTodos,
   validateTodoTitle,
 } from '../utils/todo.utils';
+import { getSampleTodos } from '../utils/sample-data';
 
 export const FOCUSFLOW_STORAGE_KEY = 'focusflow_tasks';
 
@@ -254,6 +255,17 @@ export class TodoService {
   clearAll(): void {
     this._todos.set([]);
     this.persistToStorage([]);
+  }
+
+  /**
+   * Replaces all tasks with a curated set of sample data and resets filters.
+   * Dates are computed relative to today so they never go stale.
+   */
+  loadSampleData(): void {
+    const samples = getSampleTodos();
+    this._todos.set(samples);
+    this.persistToStorage(samples);
+    this.resetFilters();
   }
 
   /**

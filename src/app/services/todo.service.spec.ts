@@ -387,4 +387,46 @@ describe('TodoService', () => {
       expect(service.todos().length).toBe(1);
     });
   });
+
+  describe('loadSampleData', () => {
+    it('should populate the service with sample tasks', () => {
+      expect(service.todos().length).toBe(0);
+      service.loadSampleData();
+      expect(service.todos().length).toBeGreaterThan(0);
+    });
+
+    it('should persist sample tasks to localStorage', () => {
+      service.loadSampleData();
+      const stored = JSON.parse(window.localStorage.getItem(FOCUSFLOW_STORAGE_KEY)!);
+      expect(Array.isArray(stored)).toBe(true);
+      expect(stored.length).toEqual(service.todos().length);
+    });
+
+    it('should reset filters after loading sample data', () => {
+      service.setSearchQuery('something');
+      service.setStatusFilter('completed');
+      service.loadSampleData();
+      const fs = service.filterState();
+      expect(fs.searchQuery).toBe('');
+      expect(fs.statusFilter).toBe('all');
+    });
+
+    it('should include at least one overdue task in sample data', () => {
+      service.loadSampleData();
+      expect(service.overdueCount()).toBeGreaterThan(0);
+    });
+
+    it('should include at least one completed task in sample data', () => {
+      service.loadSampleData();
+      expect(service.completedTodosCount()).toBeGreaterThan(0);
+    });
+
+    it('should replace existing tasks when called again', () => {
+      service.addTodo({ title: 'My own task' });
+      expect(service.todos().length).toBe(1);
+      service.loadSampleData();
+      const hasSampleTask = service.todos().some((t) => t.id.startsWith('sample-'));
+      expect(hasSampleTask).toBe(true);
+    });
+  });
 });

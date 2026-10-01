@@ -35,4 +35,10 @@ export class App {
   closeMobileMenu(): void {
     this.isMobileMenuOpen.set(false);
   }
+
+  confirmReset(): void {
+    if (window.confirm('Reset to empty? This will remove all tasks.')) {
+      this.todoService.clearAll();
+    }
+  }
 }

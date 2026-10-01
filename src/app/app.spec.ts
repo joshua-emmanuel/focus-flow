@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { App } from './app';
 import { TodoService } from './services/todo.service';
 import { ThemeService } from './services/theme.service';
@@ -13,6 +14,7 @@ describe('App Component', () => {
 
   afterEach(() => {
     window.localStorage.clear();
+    vi.restoreAllMocks();
   });
 
   it('should create the app', () => {
@@ -155,5 +157,57 @@ describe('App Component', () => {
     expect(themeService.isDark()).toBe(false);
     expect(themeBtn.getAttribute('aria-label')).toBe('Switch to dark mode');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+
+  it('should show "Load sample data" in header when task list is empty', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const loadBtn = compiled.querySelector('[data-testid="header-load-sample-btn"]');
+    expect(loadBtn).not.toBeNull();
+    expect(loadBtn?.textContent).toContain('Load sample data');
+  });
+
+  it('should show "Reset to empty" in header when tasks exist', async () => {
+    const fixture = TestBed.createComponent(App);
+    const todoService = TestBed.inject(TodoService);
+    todoService.addTodo({ title: 'A task' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const resetBtn = compiled.querySelector('[data-testid="reset-btn"]');
+    expect(resetBtn).not.toBeNull();
+    expect(resetBtn?.textContent).toContain('Reset to empty');
+  });
+
+  it('should clear all tasks when confirmReset is called and user confirms', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const todoService = TestBed.inject(TodoService);
+    todoService.addTodo({ title: 'A task' });
+    fixture.detectChanges();
+
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    app.confirmReset();
+    fixture.detectChanges();
+
+    expect(todoService.todos().length).toBe(0);
+  });
+
+  it('should not clear tasks when confirmReset is cancelled', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const todoService = TestBed.inject(TodoService);
+    todoService.addTodo({ title: 'A task' });
+    fixture.detectChanges();
+
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    app.confirmReset();
+    fixture.detectChanges();
+
+    expect(todoService.todos().length).toBe(1);
   });
 });
